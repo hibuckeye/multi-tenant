@@ -20,7 +20,6 @@ import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import se.callista.blog.management.domain.entity.Shard;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -42,28 +41,28 @@ public class SchemaInitializerImpl implements SchemaInitializer {
 
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void initializeDBSchema(Shard shard) {
+    public void initializeDBSchema(String schema) {
         try {
-            createDatabase(shard.getDb());
-            log.info("Created new shard {}", shard.getDb());
+            createDatabase(schema);
+            log.info("Created new schema {}", schema);
         } catch (DataAccessException e) {
-            throw new SchemaCreationException("Error when creating db: " + shard.getDb(), e);
+            throw new SchemaCreationException("Error when creating schema: " + schema, e);
         }
         try (Connection connection =
-                        DriverManager.getConnection(urlPrefix + shard.getDb(), username, password)) {
+                        DriverManager.getConnection(urlPrefix + schema, username, password)) {
             DataSource shardDataSource = new SingleConnectionDataSource(connection, false);
             runLiquibase(shardDataSource);
-            log.info("Initialized shard {}", shard.getDb());
+            log.info("Initialized schema {}", schema);
         } catch (SQLException | LiquibaseException e) {
-            throw new SchemaCreationException("Error when populating db: ", e);
+            throw new SchemaCreationException("Error when populating schema: ", e);
         }
     }
 
-    private void createDatabase(String db) {
+    private void createDatabase(String schema) {
         jdbcTemplate.execute(
-                        (StatementCallback<Boolean>) stmt -> stmt.execute("CREATE DATABASE " + db));
+                        (StatementCallback<Boolean>) stmt -> stmt.execute("CREATE DATABASE " + schema));
         jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt
-                        .execute("GRANT ALL PRIVILEGES ON DATABASE " + db + " TO " + username));
+                        .execute("GRANT ALL PRIVILEGES ON DATABASE " + schema + " TO " + username));
     }
 
     private void runLiquibase(DataSource dataSource) throws LiquibaseException {

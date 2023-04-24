@@ -24,8 +24,11 @@ public class Tenant {
     @Column(name = "tenant_id")
     private String tenantId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Shard shard;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    private Shard shard;
+
+    @Column(name = "schema")
+    private String schema;
 
     @Override
     public boolean equals(Object o) {

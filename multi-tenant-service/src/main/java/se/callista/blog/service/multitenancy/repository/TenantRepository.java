@@ -7,7 +7,10 @@ import se.callista.blog.service.multitenancy.domain.entity.Tenant;
 
 public interface TenantRepository extends CrudRepository<Tenant, String> {
   
-    @Query("SELECT DISTINCT t FROM Tenant t JOIN FETCH t.shard WHERE t.tenantId = :tenantId")
+//    @Query("SELECT DISTINCT t FROM Tenant t JOIN FETCH t.shard WHERE t.tenantId = :tenantId")
+//    Optional<Tenant> findByTenantId(String tenantId);
+
+    @Query("SELECT t FROM Tenant t WHERE t.tenantId = :tenantId")
     Optional<Tenant> findByTenantId(String tenantId);
 
 }

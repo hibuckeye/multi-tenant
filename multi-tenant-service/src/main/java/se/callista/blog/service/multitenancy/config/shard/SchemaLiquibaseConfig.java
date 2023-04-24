@@ -8,24 +8,26 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicSchemaMultiTenantSpringLiquibase;
-import se.callista.blog.service.multitenancy.repository.SchemaRepository;
+//import se.callista.blog.service.multitenancy.repository.SchemaRepository;
+import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
 @Configuration
 @ConditionalOnProperty(name = "multitenancy.shard.liquibase.enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties(LiquibaseProperties.class)
-public class ShardLiquibaseConfig {
+public class SchemaLiquibaseConfig {
 
     @Bean
     @ConfigurationProperties("multitenancy.shard.liquibase")
-    public LiquibaseProperties shardLiquibaseProperties() {
+    public LiquibaseProperties schemaLiquibaseProperties() {
         return new LiquibaseProperties();
     }
 
     @Bean
-    public DynamicSchemaMultiTenantSpringLiquibase shardLiquibase(
-        SchemaRepository schemaRepository,
-        @Qualifier("shardLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
-        return new DynamicSchemaMultiTenantSpringLiquibase(schemaRepository, liquibaseProperties);
+    public DynamicSchemaMultiTenantSpringLiquibase schemaLiquibase(
+//        SchemaRepository schemaRepository,
+            TenantRepository tenantRepository,
+        @Qualifier("schemaLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
+        return new DynamicSchemaMultiTenantSpringLiquibase(tenantRepository, liquibaseProperties);
     }
 
 }

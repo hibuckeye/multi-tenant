@@ -1,28 +1,28 @@
 databaseChangeLog:
 
-- changeSet:
-    id: shard-1
-    author: bjobes
-    changes:
-    - createTable:
-        tableName: shard
-        columns:
-        - column:
-            name: id
-            type: BIGINT
-            constraints:
-              primaryKey: true
-              primaryKeyName: shard_pkey
-        - column:
-            name: db
-            type: VARCHAR(30)
-        - column:
-            name: no_of_tenants
-            type: BIGINT
+#- changeSet:
+#    id: shard-1
+#    author: bjobes
+#    changes:
+#    - createTable:
+#        tableName: shard
+#        columns:
+#        - column:
+#            name: id
+#            type: BIGINT
+#            constraints:
+#              primaryKey: true
+#              primaryKeyName: shard_pkey
+#        - column:
+#            name: db
+#            type: VARCHAR(30)
+#        - column:
+#            name: no_of_tenants
+#            type: BIGINT
 
 - changeSet:
     id: tenant-1
-    author: bjobes
+    author: zerong
     changes:
     - createTable:
         tableName: tenant
@@ -33,11 +33,16 @@ databaseChangeLog:
             constraints:
               primaryKey: true
               primaryKeyName: tenant_pkey
+#        - column:
+#            name: shard_id
+#            type: BIGINT
+#            constraints:
+#              nullable: false
+#              foreignKeyName: tenant_shard_fk
+#              referencedTableName: shard
+#              referencedColumnNames: id
         - column:
-            name: shard_id
-            type: BIGINT
+            name: schema
+            type: VARCHAR(30)
             constraints:
               nullable: false
-              foreignKeyName: tenant_shard_fk
-              referencedTableName: shard
-              referencedColumnNames: id

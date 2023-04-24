@@ -17,8 +17,9 @@ import org.springframework.boot.autoconfigure.liquibase.LiquibaseProperties;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
-import se.callista.blog.service.multitenancy.domain.entity.Shard;
-import se.callista.blog.service.multitenancy.repository.SchemaRepository;
+import se.callista.blog.service.multitenancy.domain.entity.Tenant;
+//import se.callista.blog.service.multitenancy.repository.SchemaRepository;
+import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
 /**
  * Based on MultiTenantSpringLiquibase, this class provides Liquibase support for
@@ -30,9 +31,11 @@ import se.callista.blog.service.multitenancy.repository.SchemaRepository;
 @Slf4j
 public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean, ResourceLoaderAware {
 
-    private final SchemaRepository schemaRepository;
+//    private final SchemaRepository schemaRepository;
 
-    @Qualifier("shardLiquibaseProperties")
+    private final TenantRepository tenantRepository;
+
+    @Qualifier("schemaLiquibaseProperties")
     private final LiquibaseProperties liquibaseProperties;
 
     @Value("${multitenancy.shard.datasource.url-prefix}")
@@ -46,20 +49,22 @@ public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.runOnAllSchemas(schemaRepository.findAll());
+//        this.runOnAllSchemas(schemaRepository.findAll());
+        this.runOnAllSchemas(tenantRepository.findAll());
     }
 
-    protected void runOnAllSchemas(Iterable<Shard> shards) { //for each schema, get connection and run liquibase
-        for(Shard shard : shards) {
-            log.info("Initializing Liquibase for shard " + shard.getDb());
-            try (Connection connection = DriverManager.getConnection(urlPrefix + shard.getDb(), username, password)) {
+    protected void runOnAllSchemas(Iterable<Tenant> tenants) { //for each schema, get connection and run liquibase
+        for(Tenant tenant : tenants) {
+            String schema = tenant.getSchema();
+            log.info("Initializing Liquibase for tenant(schema): " + schema);
+            try (Connection connection = DriverManager.getConnection(urlPrefix + schema, username, password)) {
                 DataSource shardDataSource = new SingleConnectionDataSource(connection, false);
                 SpringLiquibase liquibase = this.getSpringLiquibase(shardDataSource);
                 liquibase.afterPropertiesSet();
             } catch (SQLException | LiquibaseException e) {
-                log.error("Failed to run Liquibase for shard " + shard.getDb(), e);
+                log.error("Failed to run Liquibase for tenant(schema): " +schema, e);
             }
-            log.info("Liquibase ran for tenant " + shard.getDb());
+            log.info("Liquibase successful ran for tenant(schema): " + schema);
         }
     }
 

@@ -43,7 +43,7 @@ public class TenantPersistenceConfig {
     @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean tenantEntityManagerFactory(
-            @Qualifier("dynamicShardingMultiTenantConnectionProvider") MultiTenantConnectionProvider connectionProvider,
+            @Qualifier("dynamicSchemaMultiTenantConnectionProvider") MultiTenantConnectionProvider connectionProvider,
             @Qualifier("currentTenantIdentifierResolver") CurrentTenantIdentifierResolver tenantResolver) {
         LocalContainerEntityManagerFactoryBean emfBean = new LocalContainerEntityManagerFactoryBean();
         emfBean.setPersistenceUnitName("tenant-persistence-unit");
