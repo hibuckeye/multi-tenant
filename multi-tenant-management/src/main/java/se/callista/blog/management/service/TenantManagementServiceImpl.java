@@ -9,7 +9,7 @@ import se.callista.blog.management.domain.entity.Tenant;
 @Service
 public class TenantManagementServiceImpl implements TenantManagementService {
 
-    private final ShardManagementService shardManagementService;
+    private final SchemaManagementService schemaManagementService;
 
     @Override
     @Transactional
@@ -17,7 +17,7 @@ public class TenantManagementServiceImpl implements TenantManagementService {
         Tenant tenant = Tenant.builder()
                 .tenantId(tenantId)
                 .build();
-        shardManagementService.allocateToShard(tenant);
+        schemaManagementService.allocateToSchema(tenant);
     }
 
 }

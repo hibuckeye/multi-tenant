@@ -7,8 +7,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicShardingMultiTenantSpringLiquibase;
-import se.callista.blog.service.multitenancy.repository.ShardRepository;
+import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicSchemaMultiTenantSpringLiquibase;
+import se.callista.blog.service.multitenancy.repository.SchemaRepository;
 
 @Configuration
 @ConditionalOnProperty(name = "multitenancy.shard.liquibase.enabled", havingValue = "true", matchIfMissing = true)
@@ -22,11 +22,10 @@ public class ShardLiquibaseConfig {
     }
 
     @Bean
-    public DynamicShardingMultiTenantSpringLiquibase shardLiquibase(
-        ShardRepository shardRepository,
-        @Qualifier("shardLiquibaseProperties")
-        LiquibaseProperties liquibaseProperties) {
-        return new DynamicShardingMultiTenantSpringLiquibase(shardRepository, liquibaseProperties);
+    public DynamicSchemaMultiTenantSpringLiquibase shardLiquibase(
+        SchemaRepository schemaRepository,
+        @Qualifier("shardLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
+        return new DynamicSchemaMultiTenantSpringLiquibase(schemaRepository, liquibaseProperties);
     }
 
 }

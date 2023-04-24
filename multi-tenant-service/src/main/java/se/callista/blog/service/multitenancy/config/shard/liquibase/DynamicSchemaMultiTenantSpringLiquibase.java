@@ -18,7 +18,7 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import se.callista.blog.service.multitenancy.domain.entity.Shard;
-import se.callista.blog.service.multitenancy.repository.ShardRepository;
+import se.callista.blog.service.multitenancy.repository.SchemaRepository;
 
 /**
  * Based on MultiTenantSpringLiquibase, this class provides Liquibase support for
@@ -28,9 +28,10 @@ import se.callista.blog.service.multitenancy.repository.ShardRepository;
 @Getter
 @Setter
 @Slf4j
-public class DynamicShardingMultiTenantSpringLiquibase implements InitializingBean, ResourceLoaderAware {
+public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean, ResourceLoaderAware {
 
-    private final ShardRepository shardRepository;
+    private final SchemaRepository schemaRepository;
+
     @Qualifier("shardLiquibaseProperties")
     private final LiquibaseProperties liquibaseProperties;
 
@@ -45,10 +46,10 @@ public class DynamicShardingMultiTenantSpringLiquibase implements InitializingBe
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.runOnAllShards(shardRepository.findAll());
+        this.runOnAllSchemas(schemaRepository.findAll());
     }
 
-    protected void runOnAllShards(Iterable<Shard> shards) {
+    protected void runOnAllSchemas(Iterable<Shard> shards) { //for each schema, get connection and run liquibase
         for(Shard shard : shards) {
             log.info("Initializing Liquibase for shard " + shard.getDb());
             try (Connection connection = DriverManager.getConnection(urlPrefix + shard.getDb(), username, password)) {
@@ -62,7 +63,7 @@ public class DynamicShardingMultiTenantSpringLiquibase implements InitializingBe
         }
     }
 
-    protected SpringLiquibase getSpringLiquibase(DataSource dataSource) {
+    protected SpringLiquibase getSpringLiquibase(DataSource dataSource) { //run liquibase dbchangelog
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setResourceLoader(getResourceLoader());
         liquibase.setDataSource(dataSource);

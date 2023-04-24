@@ -26,7 +26,7 @@ import se.callista.blog.management.domain.entity.Shard;
 @Slf4j
 @Service
 @EnableConfigurationProperties(LiquibaseProperties.class)
-public class ShardInitializerImpl implements ShardInitializer {
+public class SchemaInitializerImpl implements SchemaInitializer {
 
     private final JdbcTemplate jdbcTemplate;
     @Qualifier("shardLiquibaseProperties")
@@ -42,12 +42,12 @@ public class ShardInitializerImpl implements ShardInitializer {
 
     @Override
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    public void initializeShard(Shard shard) {
+    public void initializeDBSchema(Shard shard) {
         try {
             createDatabase(shard.getDb());
             log.info("Created new shard {}", shard.getDb());
         } catch (DataAccessException e) {
-            throw new ShardCreationException("Error when creating db: " + shard.getDb(), e);
+            throw new SchemaCreationException("Error when creating db: " + shard.getDb(), e);
         }
         try (Connection connection =
                         DriverManager.getConnection(urlPrefix + shard.getDb(), username, password)) {
@@ -55,7 +55,7 @@ public class ShardInitializerImpl implements ShardInitializer {
             runLiquibase(shardDataSource);
             log.info("Initialized shard {}", shard.getDb());
         } catch (SQLException | LiquibaseException e) {
-            throw new ShardCreationException("Error when populating db: ", e);
+            throw new SchemaCreationException("Error when populating db: ", e);
         }
     }
 

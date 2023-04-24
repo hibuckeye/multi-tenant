@@ -34,6 +34,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 public class TenantPersistenceConfig {
 
     private final ConfigurableListableBeanFactory beanFactory;
+
     private final JpaProperties jpaProperties;
 
     @Value("${multitenancy.tenant.entityManager.packages}")

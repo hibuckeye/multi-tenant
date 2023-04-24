@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.stereotype.Component;
-import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicShardingMultiTenantSpringLiquibase;
+import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicSchemaMultiTenantSpringLiquibase;
 
 @Component
 public class DatabaseInitializer {
@@ -19,7 +19,7 @@ public class DatabaseInitializer {
     private DataSource masterDataSource;
 
     @Autowired
-    DynamicShardingMultiTenantSpringLiquibase shardSpringLiquibase;
+    DynamicSchemaMultiTenantSpringLiquibase shardSpringLiquibase;
 
     @Value("${multitenancy.master.datasource.username}")
     private String username;

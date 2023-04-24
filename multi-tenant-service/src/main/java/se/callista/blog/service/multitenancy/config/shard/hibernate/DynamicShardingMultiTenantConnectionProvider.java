@@ -62,8 +62,21 @@ public class DynamicShardingMultiTenantConnectionProvider
     private LoadingCache<String, Tenant> tenants;
     private LoadingCache<Shard, DataSource> shardDataSources;
 
+    @Override
+    protected DataSource selectAnyDataSource() {
+        return masterDataSource;
+    }
+
+    @Override
+    protected DataSource selectDataSource(String tenantIdentifier) {
+        Tenant tenant = tenants.get(tenantIdentifier);
+        DataSource shardDataSource = shardDataSources.get(tenant.getShard());
+        return new TenantAwareDataSource(shardDataSource);
+    }
+
     @PostConstruct
     private void createCaches() {
+        //cache tenant <String, Tenant>
         Caffeine<Object, Object> tenantsCacheBuilder = Caffeine.newBuilder();
         if (tenantCacheMaximumSize != null) {
             tenantsCacheBuilder.maximumSize(tenantCacheMaximumSize);
@@ -74,6 +87,8 @@ public class DynamicShardingMultiTenantConnectionProvider
         tenants = tenantsCacheBuilder.build(
             tenantId -> masterTenantRepository.findByTenantId(tenantId).orElseThrow(
                             () -> new NoSuchTenantException("No such tenant: " + tenantId)));
+
+        //cache scheme <Shard, DataSource>
         Caffeine<Object, Object> shardDataSourcesCacheBuilder = Caffeine.newBuilder();
         if (datasourceCacheMaximumSize != null) {
             shardDataSourcesCacheBuilder.maximumSize(datasourceCacheMaximumSize);
@@ -90,18 +105,6 @@ public class DynamicShardingMultiTenantConnectionProvider
             });
         shardDataSources = shardDataSourcesCacheBuilder.build(
             shard -> createAndConfigureDataSource(shard));
-    }
-
-    @Override
-    protected DataSource selectAnyDataSource() {
-        return masterDataSource;
-    }
-
-    @Override
-    protected DataSource selectDataSource(String tenantIdentifier) {
-        Tenant tenant = tenants.get(tenantIdentifier);
-        DataSource shardDataSource = shardDataSources.get(tenant.getShard());
-        return new TenantAwareDataSource(shardDataSource);
     }
 
     private DataSource createAndConfigureDataSource(Shard shard) {

@@ -15,7 +15,7 @@ import se.callista.blog.management.persistence.PostgresqlTestContainer;
 
 @Testcontainers
 @SpringBootDbIntegrationTest
-class ShardRepositoryTest {
+class SchemaRepositoryTest {
 
     @Container
     private static final PostgresqlTestContainer POSTGRESQL_CONTAINER = PostgresqlTestContainer.getInstance();
@@ -24,13 +24,13 @@ class ShardRepositoryTest {
     private SpringLiquibase springLiquibase;
 
     @Autowired
-    private ShardRepository shardRepository;
+    private SchemaRepository schemaRepository;
 
     @Test
     @DataSet(value = {"repository/shards.yml", "repository/tenants.yml"})
     public void findById() throws Exception {
 
-        Optional<Shard> shard = shardRepository.findById(1);
+        Optional<Shard> shard = schemaRepository.findById(1);
         assertThat(shard).isPresent();
         assertThat(shard.get().getDb()).endsWith("shard_1");
 

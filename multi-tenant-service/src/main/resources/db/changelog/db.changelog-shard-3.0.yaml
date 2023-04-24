@@ -1,0 +1,14 @@
+databaseChangeLog:
+
+- changeSet:
+    id: product_desc
+    author: zerong
+    changes:
+    - addColumn:
+        tableName: product
+        columns:
+        - column:
+            name: category
+            type: INTEGER
+            constraints:
+              nullable: true

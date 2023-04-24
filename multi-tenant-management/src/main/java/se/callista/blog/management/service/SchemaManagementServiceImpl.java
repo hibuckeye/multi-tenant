@@ -8,15 +8,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.callista.blog.management.domain.entity.Shard;
 import se.callista.blog.management.domain.entity.Tenant;
-import se.callista.blog.management.repository.ShardRepository;
+import se.callista.blog.management.repository.SchemaRepository;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class ShardManagementServiceImpl implements ShardManagementService {
+public class SchemaManagementServiceImpl implements SchemaManagementService {
 
-    private final ShardRepository shardRepository;
-    private final ShardInitializer shardInitializer;
+    private final SchemaRepository schemaRepository;
+    private final SchemaInitializer schemaInitializer;
 
     @Value("${multitenancy.master.database}")
     private String database;
@@ -27,22 +27,22 @@ public class ShardManagementServiceImpl implements ShardManagementService {
 
     @Override
     @Transactional
-    public void allocateToShard(Tenant tenant) {
-        List<Shard> shardsWithFreeCapacity = shardRepository.findShardsWithFreeCapacity(maxTenants);
+    public void allocateToSchema(Tenant tenant) {
+        List<Shard> shardsWithFreeCapacity = schemaRepository.findShardsWithFreeCapacity(maxTenants);
         if (!shardsWithFreeCapacity.isEmpty()) {
             Shard shard = shardsWithFreeCapacity.get(0);
             shard.addTenant(tenant);
             log.info("Allocated tenant {} to shard {}", tenant.getTenantId(), shard.getDb());
         } else {
-            int newShardIndex = ((int) shardRepository.count()) + 1;
-            String newShardName = database + DATABASE_NAME_INFIX + newShardIndex;
+            int newSchemaIndex = ((int) schemaRepository.count()) + 1;
+            String newShardName = database + DATABASE_NAME_INFIX + newSchemaIndex;
             Shard shard = Shard.builder()
-                .id(newShardIndex)
+                .id(newSchemaIndex)
                 .db(newShardName)
                 .build();
-            shardInitializer.initializeShard(shard);
+            schemaInitializer.initializeDBSchema(shard);
             shard.addTenant(tenant);
-            shardRepository.save(shard);
+            schemaRepository.save(shard);
             log.info("Allocated tenant {} to new shard {}", tenant.getTenantId(), shard.getDb());
         }
     }

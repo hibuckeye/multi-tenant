@@ -2,8 +2,8 @@ package se.callista.blog.management.service;
 
 import se.callista.blog.management.domain.entity.Shard;
 
-public interface ShardInitializer {
+public interface SchemaInitializer {
 
-    void initializeShard(Shard shard);
+    void initializeDBSchema(Shard shard);
 
 }
