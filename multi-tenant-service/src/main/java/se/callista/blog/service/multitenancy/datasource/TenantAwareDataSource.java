@@ -38,7 +38,7 @@ public class TenantAwareDataSource extends DelegatingDataSource {
 
     private void setTenantId(Connection connection) throws SQLException {
         try (Statement sql = connection.createStatement()) {
-            String tenantId = TenantContext.getTenantId();
+            Long tenantId = TenantContext.getTenantId();
             sql.execute("SET app.tenant_id TO '" + tenantId + "'");
         }
     }

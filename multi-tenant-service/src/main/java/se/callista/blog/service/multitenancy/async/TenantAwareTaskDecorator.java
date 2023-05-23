@@ -9,7 +9,7 @@ public class TenantAwareTaskDecorator implements TaskDecorator {
     @Override
     @NonNull
     public Runnable decorate(@NonNull Runnable runnable) {
-        String tenantId = TenantContext.getTenantId();
+        Long tenantId = TenantContext.getTenantId();
         return () -> {
             try {
                 TenantContext.setTenantId(tenantId);

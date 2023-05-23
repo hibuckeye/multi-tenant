@@ -59,7 +59,7 @@ databaseChangeLog:
         columns:
         - column:
             name: tenant_id
-            type: VARCHAR(30)
+            type: BIGINT
             constraints:
               nullable: false
 
@@ -73,4 +73,4 @@ databaseChangeLog:
             ALTER TABLE product ENABLE ROW LEVEL SECURITY;
             DROP POLICY IF EXISTS product_tenant_isolation_policy ON product;
             CREATE POLICY product_tenant_isolation_policy ON product
-                USING (tenant_id = current_setting('app.tenant_id')::VARCHAR);
+                USING (tenant_id = current_setting('app.tenant_id')::BIGINT);

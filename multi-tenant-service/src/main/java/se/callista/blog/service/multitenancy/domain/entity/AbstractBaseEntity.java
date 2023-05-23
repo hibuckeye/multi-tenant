@@ -18,11 +18,11 @@ import se.callista.blog.service.multitenancy.listener.TenantListener;
 public abstract class AbstractBaseEntity implements TenantAware, Serializable {
     private static final long serialVersionUID = 1L;
 
-    @Size(max = 30)
+//    @Size(max = 30)
     @Column(name = "tenant_id")
-    private String tenantId;
+    private Long tenantId;
 
-    public AbstractBaseEntity(String tenantId) {
+    public AbstractBaseEntity(Long tenantId) {
         this.tenantId = tenantId;
     }
 

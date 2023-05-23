@@ -16,7 +16,7 @@ public class TenantInterceptor implements WebRequestInterceptor {
     public void preHandle(WebRequest request) {
         if (request.getHeader(X_TENANT_ID) != null) {
             String tenantId = request.getHeader(X_TENANT_ID);
-            TenantContext.setTenantId(tenantId);
+            TenantContext.setTenantId(Long.valueOf(tenantId));
         }
     }
 

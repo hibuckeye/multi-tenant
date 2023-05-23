@@ -11,6 +11,6 @@ public interface TenantRepository extends CrudRepository<Tenant, String> {
 //    Optional<Tenant> findByTenantId(String tenantId);
 
     @Query("SELECT t FROM Tenant t WHERE t.tenantId = :tenantId")
-    Optional<Tenant> findByTenantId(String tenantId);
+    Optional<Tenant> findByTenantId(Long tenantId);
 
 }

@@ -38,7 +38,8 @@ public class ProductServiceTest {
     @Test
     public void getProductForTenant1() {
 
-        TenantContext.setTenantId("tenant1");
+//        TenantContext.setTenantId("tenant1");
+        TenantContext.setTenantId(1L);
         ProductValue product = productService.getProduct(1);
         assertThat(product.getName()).isEqualTo("Product 1");
         TenantContext.clear();
@@ -48,7 +49,8 @@ public class ProductServiceTest {
     @Test
     public void tenant2CantGetProductForTenant1() {
 
-        TenantContext.setTenantId("tenant2");
+//        TenantContext.setTenantId("tenant2");
+        TenantContext.setTenantId(2L);
         assertThrows(EntityNotFoundException.class, () -> productService.getProduct(1));
         TenantContext.clear();
 
@@ -57,7 +59,8 @@ public class ProductServiceTest {
     @Test
     public void getProductForTenant3() {
 
-        TenantContext.setTenantId("tenant3");
+//        TenantContext.setTenantId("tenant3");
+        TenantContext.setTenantId(3L);
         ProductValue product = productService.getProduct(3);
         assertThat(product.getName()).isEqualTo("Product 3");
         TenantContext.clear();

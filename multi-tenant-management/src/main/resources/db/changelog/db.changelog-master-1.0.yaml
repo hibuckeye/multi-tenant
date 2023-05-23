@@ -29,10 +29,16 @@ databaseChangeLog:
         columns:
         - column:
             name: tenant_id
-            type: VARCHAR(30)
+            type: BIGINT
+            autoIncrement: true
             constraints:
               primaryKey: true
               primaryKeyName: tenant_pkey
+        - column:
+              name: name
+              type: VARCHAR(30)
+              constraints:
+                  nullable: false
 #        - column:
 #            name: shard_id
 #            type: BIGINT
@@ -45,4 +51,4 @@ databaseChangeLog:
             name: schema
             type: VARCHAR(30)
             constraints:
-              nullable: false
+              nullable: true

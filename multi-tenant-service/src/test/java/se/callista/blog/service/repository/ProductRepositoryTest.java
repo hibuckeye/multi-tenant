@@ -37,7 +37,8 @@ class ProductRepositoryTest {
     @Test
     public void findByIdForTenant1() {
 
-        TenantContext.setTenantId("tenant1");
+//        TenantContext.setTenantId("tenant1");
+        TenantContext.setTenantId(1L);
         Optional<Product> product = productRepository.findById(1L);
         assertThat(product).isPresent();
         assertThat(product.get().getName()).isEqualTo("Product 1");
@@ -48,7 +49,8 @@ class ProductRepositoryTest {
     @Test
     public void findByIdForTenant2() {
 
-        TenantContext.setTenantId("tenant2");
+//        TenantContext.setTenantId("tenant2");
+        TenantContext.setTenantId(2L);
         assertThat(productRepository.findById(1L)).isNotPresent();
         TenantContext.clear();
 
@@ -57,7 +59,8 @@ class ProductRepositoryTest {
     @Test
     public void findByIdForTenant3() {
 
-        TenantContext.setTenantId("tenant3");
+//        TenantContext.setTenantId("tenant3");
+        TenantContext.setTenantId(3L);
         Optional<Product> product = productRepository.findById(3L);
         assertThat(product).isPresent();
         assertThat(product.get().getName()).isEqualTo("Product 3");

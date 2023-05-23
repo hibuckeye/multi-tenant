@@ -7,14 +7,14 @@ public final class TenantContext {
 
     private TenantContext() {}
 
-    private static final InheritableThreadLocal<String> currentTenant = new InheritableThreadLocal<>();
+    private static final InheritableThreadLocal<Long> currentTenant = new InheritableThreadLocal<>();
 
-    public static void setTenantId(String tenantId) {
+    public static void setTenantId(Long tenantId) {
         log.debug("Setting tenantId to " + tenantId);
         currentTenant.set(tenantId);
     }
 
-    public static String getTenantId() {
+    public static Long getTenantId() {
         return currentTenant.get();
     }
 

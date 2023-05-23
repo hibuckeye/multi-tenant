@@ -27,7 +27,8 @@ class TenantRepositoryTest {
     @DataSet(value = {"repository/shards.yml, repository/tenants.yml"})
     public void findById() throws Exception {
 
-        Optional<Tenant> tenant = tenantRepository.findByTenantId("tenant1");
+//        Optional<Tenant> tenant = tenantRepository.findByTenantId("tenant1");
+        Optional<Tenant> tenant = tenantRepository.findByTenantId(1L);
         assertThat(tenant).isPresent();
 //        Shard shard = tenant.get().getShard();
 //        assertThat(shard.getId()).isEqualTo(1);

@@ -12,7 +12,7 @@ public class TenantListener {
     @PreRemove
     @PrePersist
     public void setTenant(TenantAware entity) {
-        final String tenantId = TenantContext.getTenantId();
+        final Long tenantId = TenantContext.getTenantId();
         entity.setTenantId(tenantId);
     }
 }

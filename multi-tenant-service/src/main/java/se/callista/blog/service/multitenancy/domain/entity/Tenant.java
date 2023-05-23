@@ -1,11 +1,7 @@
 package se.callista.blog.service.multitenancy.domain.entity;
 
 import java.util.Objects;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,9 +16,10 @@ import lombok.NoArgsConstructor;
 public class Tenant {
 
     @Id
-    @Size(max = 30)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Size(max = 30)
     @Column(name = "tenant_id")
-    private String tenantId;
+    private Long tenantId;
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Shard shard;
