@@ -55,7 +55,7 @@ public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean
 
     protected void runOnAllSchemas(Iterable<Tenant> tenants) { //for each schema, get connection and run liquibase
         for(Tenant tenant : tenants) {
-            String schema = tenant.getSchema();
+            String schema = tenant.getDb();
             log.info("Initializing Liquibase for tenant(schema): " + schema);
             try (Connection connection = DriverManager.getConnection(urlPrefix + schema, username, password)) {
                 DataSource shardDataSource = new SingleConnectionDataSource(connection, false);

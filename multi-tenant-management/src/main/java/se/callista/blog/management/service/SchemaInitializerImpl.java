@@ -3,6 +3,7 @@ package se.callista.blog.management.service;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 import javax.sql.DataSource;
 import liquibase.exception.LiquibaseException;
 import liquibase.integration.spring.SpringLiquibase;
@@ -51,7 +52,7 @@ public class SchemaInitializerImpl implements SchemaInitializer {
         try (Connection connection =
                         DriverManager.getConnection(urlPrefix + schema, username, password)) {
             DataSource shardDataSource = new SingleConnectionDataSource(connection, false);
-            runLiquibase(shardDataSource);
+            runLiquibase(shardDataSource, schema);
             log.info("Initialized schema {}", schema);
         } catch (SQLException | LiquibaseException e) {
             throw new SchemaCreationException("Error when populating schema: ", e);
@@ -62,15 +63,15 @@ public class SchemaInitializerImpl implements SchemaInitializer {
         jdbcTemplate.execute(
                         (StatementCallback<Boolean>) stmt -> stmt.execute("CREATE DATABASE " + schema));
         jdbcTemplate.execute((StatementCallback<Boolean>) stmt -> stmt
-                        .execute("GRANT ALL PRIVILEGES ON DATABASE " + schema + " TO " + username));
+                        .execute("GRANT ALL PRIVILEGES ON " + schema + ".* TO \'" + username + "\'@\'%\'"));
     }
 
-    private void runLiquibase(DataSource dataSource) throws LiquibaseException {
-        SpringLiquibase liquibase = getSpringLiquibase(dataSource);
+    private void runLiquibase(DataSource dataSource, String schema) throws LiquibaseException {
+        SpringLiquibase liquibase = getSpringLiquibase(dataSource, schema);
         liquibase.afterPropertiesSet();
     }
 
-    protected SpringLiquibase getSpringLiquibase(DataSource dataSource) {
+    protected SpringLiquibase getSpringLiquibase(DataSource dataSource, String schema) {
         SpringLiquibase liquibase = new SpringLiquibase();
         liquibase.setResourceLoader(resourceLoader);
         liquibase.setDataSource(dataSource);
@@ -85,7 +86,9 @@ public class SchemaInitializerImpl implements SchemaInitializer {
         liquibase.setDropFirst(liquibaseProperties.isDropFirst());
         liquibase.setShouldRun(liquibaseProperties.isEnabled());
         liquibase.setLabels(liquibaseProperties.getLabels());
-        liquibase.setChangeLogParameters(liquibaseProperties.getParameters());
+        Map<String, String> params = liquibaseProperties.getParameters();
+        params.put("database", schema);
+        liquibase.setChangeLogParameters(params);
         liquibase.setRollbackFile(liquibaseProperties.getRollbackFile());
         liquibase.setTestRollbackOnUpdate(liquibaseProperties.isTestRollbackOnUpdate());
         return liquibase;

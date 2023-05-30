@@ -1,9 +1,7 @@
 package se.callista.blog.management.service;
 
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import se.callista.blog.management.domain.entity.Tenant;
@@ -19,10 +17,10 @@ public class SchemaManagementServiceImpl implements SchemaManagementService {
     private final TenantRepository tenantRepository;
     private final SchemaInitializer schemaInitializer;
 
-    @Value("${multitenancy.master.database}")
-    private String database;
-    @Value("${multitenancy.shard.max-tenants}")
-    private int maxTenants;
+//    @Value("${multitenancy.master.database}")
+//    private String database;
+//    @Value("${multitenancy.shard.max-tenants}")
+//    private int maxTenants;
 
     private static final String DATABASE_NAME_INFIX = "_shard_";
 
@@ -45,7 +43,7 @@ public class SchemaManagementServiceImpl implements SchemaManagementService {
 //                .build();
             String schemaName = SCHEMA_NAME_INFIX + tenant.getTenantId();
             schemaInitializer.initializeDBSchema(schemaName);
-            tenant.setSchema(schemaName);
+            tenant.setDb(schemaName);
             tenantRepository.save(tenant);
 //            shard.addTenant(tenant);
 //            schemaRepository.save(shard);

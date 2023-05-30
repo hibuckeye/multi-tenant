@@ -2,7 +2,7 @@ package se.callista.blog.management.domain.entity;
 
 import java.util.Objects;
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +27,8 @@ public class Tenant {
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    private Shard shard;
 
-    @Column(name = "schema")
-    private String schema;
+    @Column(name = "db")
+    private String db;
 
     @Override
     public boolean equals(Object o) {

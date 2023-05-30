@@ -48,7 +48,7 @@ databaseChangeLog:
 #              referencedTableName: shard
 #              referencedColumnNames: id
         - column:
-            name: schema
+            name: db
             type: VARCHAR(30)
             constraints:
               nullable: true

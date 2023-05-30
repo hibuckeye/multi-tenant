@@ -1,4 +1,4 @@
-# Multi Tenant Service
+# Multi Tenant Service Demo
 
 ## Running the Multi Tenant Service
 

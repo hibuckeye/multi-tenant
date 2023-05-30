@@ -25,14 +25,14 @@ public class TenantAwareDataSource extends DelegatingDataSource {
     @Override
     public Connection getConnection() throws SQLException {
         final Connection connection = getTargetDataSource().getConnection();
-        setTenantId(connection);
+//        setTenantId(connection);
         return getTenantAwareConnectionProxy(connection);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
         final Connection connection = getTargetDataSource().getConnection(username, password);
-        setTenantId(connection);
+//        setTenantId(connection);
         return getTenantAwareConnectionProxy(connection);
     }
 
@@ -90,7 +90,7 @@ public class TenantAwareDataSource extends DelegatingDataSource {
                     return target;
                 default:
                     if (method.getName().equals("close")) {
-                        clearTenantId(target);
+//                        clearTenantId(target);
                     }
                     return method.invoke(target, args);
             }
