@@ -62,7 +62,6 @@ public class DynamicSchemaMultiTenantConnectionProvider
     private String password;
 
 //    private LoadingCache<String, Tenant> tenants;
-//    private LoadingCache<Shard, DataSource> shardDataSources;
 
     private LoadingCache<String, DataSource> schemaDataSources;
 

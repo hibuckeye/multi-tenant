@@ -5,8 +5,6 @@ spring:
     show-sql: true
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
-#        default_schema: public
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         default_schema: master
     hibernate:
@@ -14,13 +12,6 @@ spring:
     open-in-view: false
 multitenancy:
   master:
-#    database: master
-#    datasource:
-#      url: jdbc:postgresql://localhost:5432/master
-#      username: postgres
-#      password: secret
-#      hikari:
-#        maximum-pool-size: 1
     datasource:
       type: com.zaxxer.hikari.HikariDataSource
       url: jdbc:mysql://localhost:3306/master
@@ -47,7 +38,6 @@ multitenancy:
     username: app_user
     password: secret
     datasource:
-#      url-prefix: jdbc:postgresql://localhost:5432/
       url-prefix: jdbc:mysql://localhost:3306/
     liquibase:
       enabled: true
@@ -63,7 +53,7 @@ multitenancy:
     entityManager:
       packages: se.callista.blog.service.domain
 
-logging:
-  level:
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type: TRACE
+#logging:
+#  level:
+#    org.hibernate.SQL: DEBUG
+#    org.hibernate.type: TRACE

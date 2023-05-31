@@ -8,7 +8,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import se.callista.blog.service.multitenancy.config.shard.liquibase.DynamicSchemaMultiTenantSpringLiquibase;
-//import se.callista.blog.service.multitenancy.repository.SchemaRepository;
 import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
 @Configuration
@@ -24,7 +23,6 @@ public class SchemaLiquibaseConfig {
 
     @Bean
     public DynamicSchemaMultiTenantSpringLiquibase schemaLiquibase(
-//        SchemaRepository schemaRepository,
             TenantRepository tenantRepository,
         @Qualifier("schemaLiquibaseProperties") LiquibaseProperties liquibaseProperties) {
         return new DynamicSchemaMultiTenantSpringLiquibase(tenantRepository, liquibaseProperties);

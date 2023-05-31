@@ -18,7 +18,6 @@ import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import se.callista.blog.service.multitenancy.domain.entity.Tenant;
-//import se.callista.blog.service.multitenancy.repository.SchemaRepository;
 import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
 /**
@@ -30,8 +29,6 @@ import se.callista.blog.service.multitenancy.repository.TenantRepository;
 @Setter
 @Slf4j
 public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean, ResourceLoaderAware {
-
-//    private final SchemaRepository schemaRepository;
 
     private final TenantRepository tenantRepository;
 
@@ -49,7 +46,6 @@ public class DynamicSchemaMultiTenantSpringLiquibase implements InitializingBean
 
     @Override
     public void afterPropertiesSet() throws Exception {
-//        this.runOnAllSchemas(schemaRepository.findAll());
         this.runOnAllSchemas(tenantRepository.findAll());
     }
 

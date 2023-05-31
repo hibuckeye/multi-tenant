@@ -16,16 +16,12 @@ import lombok.NoArgsConstructor;
 public class Tenant {
 
     @Id
-//    @Size(max = 30)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "tenant_id")
     private Long tenantId;
 
     @Column(name = "name")
     private String name;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Shard shard;
 
     @Column(name = "db")
     private String db;

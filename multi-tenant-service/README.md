@@ -20,18 +20,18 @@ mvn spring-boot:run
 
 ## Testing the Multi Tenant Service
 
-Insert some test data for different tenants:
+Add some data to different tenant by specifying tenantId in header
 
 ```
-curl -H "X-TENANT-ID: tenant1" -H "Content-Type: application/se.callista.blog.service.api.product.v1_0+json" -X POST -d '{"name":"Product 1"}' localhost:8080/products
-curl -H "X-TENANT-ID: tenant2" -H "Content-Type: application/se.callista.blog.service.api.product.v1_0+json" -X POST -d '{"name":"Product 2"}' localhost:8080/products
+curl --location 'localhost:8080/products' --header 'X-TENANT-ID: 1' --header 'Content-Type: application/se.callista.blog.service.api.product.v1_0+json' --data '{"name": "Product 111"}'
+curl --location 'localhost:8080/products' --header 'X-TENANT-ID: 2' --header 'Content-Type: application/se.callista.blog.service.api.product.v1_0+json' --data '{"name": "Product 2"}'
 ```
 
 Then query for the data, and verify that the data is properly isolated between tenants:
 
 ```
-curl -H "X-TENANT-ID: tenant1" localhost:8080/products
-curl -H "X-TENANT-ID: tenant2" localhost:8080/products
+curl --location 'localhost:8080/products' --header 'X-TENANT-ID: 1'
+curl --location 'localhost:8080/products' --header 'X-TENANT-ID: 2'
 ```
 
 ## Configuration

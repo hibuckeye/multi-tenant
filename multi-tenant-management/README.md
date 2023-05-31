@@ -2,8 +2,7 @@
 
 ## Overview  
 
-This app provides a simple rest interface for dynamically adding tenants
-and allocate them to shards, creating new shards as necessary.
+This app provides a simple rest interface for dynamically creating new tenants
 
 ## Running the Multi Tenant Management Service
 
@@ -25,16 +24,12 @@ mvn spring-boot:run
 
 ## Testing the Multi Tenant Management Service
 
-Set up some different tenants:
+Set up some different tenants (Create new tenants):
 
 ```
-curl -X POST "localhost:8088/tenants?tenantId=tenant1"
-curl -X POST "localhost:8088/tenants?tenantId=tenant2"
-curl -X POST "localhost:8088/tenants?tenantId=tenant3"
+curl --location 'localhost:8088/tenants' --header 'Content-Type: application/json' --data '{"name": "test tenant1"}'
+curl --location 'localhost:8088/tenants' --header 'Content-Type: application/json' --data '{"name": "test tenant2"}'
 ```
-
-Since the `multitenancy.shard.max-tenants` is set to `2`, this will create 2 shards, the first
-one hosting tenant1 and tenant2, and the second hosting tenant3.
 
 ## Configuration
 

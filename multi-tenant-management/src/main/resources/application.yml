@@ -5,43 +5,12 @@ spring:
     show-sql: true
     properties:
       hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
         dialect: org.hibernate.dialect.MySQL5InnoDBDialect
         default_schema: master
-#    hibernate:
-#      ddl-auto: none
-#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
-#    database: MYSQL
-#    show-sql: true
-#    properties:
-#      hibernate.id.new_generator_mappings: true
-#      hibernate.cache.use_second_level_cache: false
-#      hibernate.cache.use_query_cache: false
-#      hibernate.generate_statistics: true
-#      hibernate.jdbc.batch_size: 100
-#      hibernate.order_inserts: true
-#      hibernate.default_schema: master
-#      hibernate:
-#        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
     open-in-view: false
+
 multitenancy:
   master:
-#    database: master
-#    datasource:
-#      url: jdbc:mysql://localhost:3306/master
-#      username: root
-#      password: mauFJcuf5dhRMQrjj
-#    driver-class-name: com.mysql.jdbc.Driver
-#    hikari:
-#      poolName: Hikari
-#      data-source-properties:
-#        cachePrepStmts: true
-#        prepStmtCacheSize: 250
-#        prepStmtCacheSqlLimit: 2048
-#        useServerPrepStmts: true
-#      minimum-idle: 10
-#      maximum-pool-size: 30
-#      connection-timeout: 60000
     datasource:
       type: com.zaxxer.hikari.HikariDataSource
       url: jdbc:mysql://localhost:3306/master
@@ -63,20 +32,16 @@ multitenancy:
   shard:
     max-tenants: 2
     datasource:
-#      url-prefix: jdbc:postgresql://localhost:5432/
       url-prefix: jdbc:mysql://localhost:3306/
     liquibase:
       enabled: true
       changeLog: classpath:db/changelog/db.changelog-shard.yaml
       parameters:
-#        schema: ${spring.jpa.properties.hibernate.default_schema}
         schema: master
-#        database: ${multitenancy.master.database}
-#        database: master
         app_db_user: app_user
         app_db_password: secret
 
-logging:
-    level:
-        org.hibernate.SQL: DEBUG
-        org.hibernate.type: TRACE
+#logging:
+#    level:
+#        org.hibernate.SQL: DEBUG
+#        org.hibernate.type: TRACE

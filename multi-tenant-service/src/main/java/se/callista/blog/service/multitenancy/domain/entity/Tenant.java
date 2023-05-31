@@ -17,12 +17,8 @@ public class Tenant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Size(max = 30)
     @Column(name = "tenant_id")
     private Long tenantId;
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    private Shard shard;
 
     @Column(name = "db")
     private String db;

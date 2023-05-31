@@ -52,15 +52,3 @@ databaseChangeLog:
             type: BIGINT
             constraints:
               nullable: false
-
-#- changeSet:
-#    id: product_row_level_security
-#    author: bjobes
-#    changes:
-#    -  sql:
-#        dbms: 'postgresql'
-#        sql: >-
-#            ALTER TABLE product ENABLE ROW LEVEL SECURITY;
-#            DROP POLICY IF EXISTS product_tenant_isolation_policy ON product;
-#            CREATE POLICY product_tenant_isolation_policy ON product
-#                USING (tenant_id = current_setting('app.tenant_id')::BIGINT);
