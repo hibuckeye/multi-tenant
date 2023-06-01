@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.stereotype.Component;
 import se.callista.blog.service.exception.NoSuchTenantException;
-import se.callista.blog.service.multitenancy.datasource.TenantAwareDataSource;
+//import se.callista.blog.service.multitenancy.datasource.TenantAwareDataSource;
 //import se.callista.blog.service.multitenancy.domain.entity.Shard;
 import se.callista.blog.service.multitenancy.domain.entity.Tenant;
 import se.callista.blog.service.multitenancy.repository.TenantRepository;
@@ -74,7 +74,8 @@ public class DynamicSchemaMultiTenantConnectionProvider
     protected DataSource selectDataSource(String tenantIdentifier) {
 //        Tenant tenant = tenants.get(tenantIdentifier);
         DataSource schemaDataSource = schemaDataSources.get(SCHEMA_NAME_INFIX + tenantIdentifier);
-        return new TenantAwareDataSource(schemaDataSource);
+//        return new TenantAwareDataSource(schemaDataSource);
+        return schemaDataSource;
     }
 
     @PostConstruct
