@@ -7,7 +7,9 @@ public final class TenantContext {
 
     private TenantContext() {}
 
-    private static final InheritableThreadLocal<Long> currentTenant = new InheritableThreadLocal<>();
+//    private static final InheritableThreadLocal<Long> currentTenant = new InheritableThreadLocal<>();
+
+    private static final ThreadLocal<Long> currentTenant = new ThreadLocal<>();
 
     public static void setTenantId(Long tenantId) {
         log.debug("Setting tenantId to " + tenantId);
@@ -15,7 +17,8 @@ public final class TenantContext {
     }
 
     public static Long getTenantId() {
-        return currentTenant.get();
+        Long res = currentTenant.get();
+        return res;
     }
 
     public static void clear(){

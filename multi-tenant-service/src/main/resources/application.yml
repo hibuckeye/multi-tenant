@@ -10,6 +10,9 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
+  liquibase:
+    enabled: false
+
 multitenancy:
   master:
     datasource:
@@ -32,21 +35,21 @@ multitenancy:
       packages: se.callista.blog.service.multitenancy.repository
     entityManager:
       packages: se.callista.blog.service.multitenancy.domain
-    liquibase:
-      enabled: false
+#    liquibase:
+#      enabled: false
   shard:
     username: app_user
     password: secret
     datasource:
       url-prefix: jdbc:mysql://localhost:3306/
-    liquibase:
-      enabled: true
-      changeLog: classpath:db/changelog/db.changelog-shard.yaml
-      parameters:
-        schema: ${spring.jpa.properties.hibernate.default_schema}
-        database: ${multitenancy.master.database}
-        app_db_user: ${multitenancy.shard.username}
-        app_db_password: ${multitenancy.shard.password}
+#    liquibase:
+#      enabled: false
+#      changeLog: classpath:db/changelog/db.changelog-shard.yaml
+#      parameters:
+#        schema: ${spring.jpa.properties.hibernate.default_schema}
+#        database: ${multitenancy.master.database}
+#        app_db_user: ${multitenancy.shard.username}
+#        app_db_password: ${multitenancy.shard.password}
   tenant:
     repository:
       packages: se.callista.blog.service.repository
