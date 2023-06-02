@@ -3,19 +3,22 @@ package se.callista.blog.service.multitenancy.config.tenant;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import se.callista.blog.service.multitenancy.datasource.MultiTenantDataSource;
-//import se.callista.blog.service.multitenancy.repository.TenantRepository;
+import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
 import javax.sql.DataSource;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -24,7 +27,13 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Slf4j
 @Configuration
-//@EnableJpaRepositories(basePackages = { "${multitenancy.tenant.repository.packages}" })
+@EnableJpaRepositories(
+        basePackages = { "${multitenancy.tenant.repository.packages}" },
+        entityManagerFactoryRef = "tenantEntityManager",
+        transactionManagerRef = "transactionManager")
+//@EnableConfigurationProperties(JpaProperties.class)
+//@EnableTransactionManagement
+
 public class MultiTenantConfiguration {
 
 //    @Value("${defaultTenant}")
@@ -46,13 +55,31 @@ public class MultiTenantConfiguration {
     @Qualifier("masterDataSourceProperties")
     private final DataSourceProperties dataSourceProperties;
 
-//    private final TenantRepository masterTenantRepository;
+    @Value("${multitenancy.tenant.entityManager.packages}")
+    private String entityPackages;
+
+    private final TenantRepository masterTenantRepository;
+
+//    private final TenantConfiguration tenantConfiguration;
 
     private static final String TENANT_POOL_NAME_SUFFIX = "_DataSource";
 
     private static final String SCHEMA_NAME_INFIX = "tenant_";
 
     private final List<String> schemas = Arrays.asList("tenant_1", "tenant_2");
+
+    @Bean(name = "tenantEntityManager")
+    @Primary
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(dataSource()).packages(entityPackages).build();
+    }
+
+    @Primary
+    @Bean(name = "transactionManager")
+    public JpaTransactionManager transactionManager(
+            @Autowired @Qualifier("tenantEntityManager") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+        return new JpaTransactionManager(entityManagerFactoryBean.getObject());
+    }
 
     @Bean
     @Primary

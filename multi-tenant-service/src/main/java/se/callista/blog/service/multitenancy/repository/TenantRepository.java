@@ -1,5 +1,6 @@
 package se.callista.blog.service.multitenancy.repository;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -9,5 +10,8 @@ public interface TenantRepository extends CrudRepository<Tenant, String> {
 
     @Query("SELECT t FROM Tenant t WHERE t.tenantId = :tenantId")
     Optional<Tenant> findByTenantId(Long tenantId);
+
+    @Override
+    List<Tenant> findAll();
 
 }
