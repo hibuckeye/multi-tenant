@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 //@SpringBootApplication
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class, LiquibaseAutoConfiguration.class })
-@EnableTransactionManagement
+//@EnableTransactionManagement
 //@EnableAsync
 public class MultiTenantServiceApplication extends SpringBootServletInitializer {
 

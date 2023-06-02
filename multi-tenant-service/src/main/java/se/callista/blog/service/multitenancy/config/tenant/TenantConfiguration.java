@@ -1,44 +1,43 @@
 package se.callista.blog.service.multitenancy.config.tenant;
 
-import com.zaxxer.hikari.HikariDataSource;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import se.callista.blog.service.multitenancy.datasource.MultiTenantDataSource;
-import se.callista.blog.service.multitenancy.domain.entity.Tenant;
-import se.callista.blog.service.multitenancy.repository.TenantRepository;
 
-import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Configuration
+@EnableJpaRepositories(
+        basePackages = { "${multitenancy.tenant.repository.packages}" },
+        entityManagerFactoryRef = "tenantEntityManager",
+        transactionManagerRef = "tenantTransactionManager")
 public class TenantConfiguration {
 
-    private final TenantRepository masterTenantRepository;
+    @Value("${multitenancy.tenant.entityManager.packages}")
+    private String entityPackages;
 
-    private List<String> schemas;
+    @Bean(name = "tenantEntityManager")
+    @Primary
+    public LocalContainerEntityManagerFactoryBean entityManagerFactoryBean(@Qualifier("tenantDataSource") DataSource dataSource,
+                                                                           EntityManagerFactoryBuilder builder) {
+        return builder.dataSource(dataSource).packages(entityPackages).build();
+    }
 
-    @PostConstruct
-    public void test() {
-        List<String> res = masterTenantRepository.findAll().stream().map(Tenant::getDb).collect(Collectors.toList());
-        schemas = res;
+    @Primary
+    @Bean(name = "tenantTransactionManager")
+    public JpaTransactionManager transactionManager(
+            @Autowired @Qualifier("tenantEntityManager") LocalContainerEntityManagerFactoryBean entityManagerFactoryBean) {
+        return new JpaTransactionManager(entityManagerFactoryBean.getObject());
     }
 
 }
